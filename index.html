@@ -1,0 +1,668 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <title>MIL GRAU PIZZAS - Peça Online</title>
+  <!-- Google Fonts + Font Awesome -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    /* ========== NOVA IDENTIDADE VISUAL - AZUL / BRANCO / AMARELO ========== */
+    :root {
+      --primary-blue: #1E3A8A;
+      --secondary-blue: #3B82F6;
+      --light-blue: #DBEAFE;
+      --white: #FFFFFF;
+      --yellow-accent: #FACC15;
+      --text-dark: #1F2937;
+      --text-light: #6B7280;
+      --border-radius: 1rem;
+      --shadow-sm: 0 4px 12px rgba(0, 0, 0, 0.08);
+      --shadow-md: 0 6px 18px rgba(0, 0, 0, 0.08);
+      --transition: all 0.2s ease-in-out;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    }
+
+    body {
+      background: var(--white);
+      color: var(--text-dark);
+    }
+
+    /* HEADER AZUL */
+    .app-header {
+      background: var(--primary-blue);
+      box-shadow: var(--shadow-sm);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .top-bar {
+      background: transparent;
+      padding: 0.9rem 1.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      color: white;
+    }
+
+    .logo-area h1 {
+      font-size: 1.7rem;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+      color: var(--white);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .logo-area p {
+      font-size: 0.7rem;
+      opacity: 0.85;
+      color: var(--light-blue);
+      margin-top: 2px;
+    }
+
+    .cart-icon {
+      background: rgba(255,255,255,0.15);
+      backdrop-filter: blur(2px);
+      color: var(--white);
+      border-radius: 40px;
+      padding: 0.5rem 1.2rem;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      cursor: pointer;
+      transition: var(--transition);
+      border: 1px solid rgba(255,255,255,0.3);
+    }
+
+    .cart-icon:hover {
+      background: var(--secondary-blue);
+      transform: scale(1.02);
+    }
+
+    .cart-icon span {
+      background: var(--yellow-accent);
+      color: var(--primary-blue);
+      border-radius: 30px;
+      padding: 0 8px;
+      font-size: 0.8rem;
+      font-weight: 800;
+    }
+
+    /* BANNER */
+    .banner-cover {
+      background: linear-gradient(135deg, var(--primary-blue) 0%, #0f2b5c 100%);
+      padding: 1.8rem;
+      text-align: center;
+      color: white;
+      box-shadow: inset 0 2px 5px rgba(0,0,0,0.05), 0 2px 8px rgba(0,0,0,0.05);
+    }
+
+    .banner-cover h2 {
+      font-size: 1.5rem;
+      font-weight: 800;
+      letter-spacing: -0.3px;
+    }
+
+    .banner-cover h2 i {
+      color: var(--yellow-accent);
+      margin-right: 6px;
+    }
+
+    /* CATEGORIAS */
+    .categories-nav {
+      display: flex;
+      overflow-x: auto;
+      gap: 0.8rem;
+      padding: 1rem 1.5rem;
+      background: var(--light-blue);
+      border-bottom: 1px solid rgba(30,58,138,0.1);
+      scrollbar-width: thin;
+    }
+
+    .cat-btn {
+      background: var(--white);
+      border: none;
+      padding: 0.6rem 1.3rem;
+      border-radius: 40px;
+      font-weight: 600;
+      font-size: 0.85rem;
+      white-space: nowrap;
+      transition: var(--transition);
+      color: var(--text-dark);
+      cursor: pointer;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .cat-btn.active {
+      background: var(--primary-blue);
+      color: white;
+      box-shadow: 0 4px 12px rgba(30,58,138,0.3);
+    }
+
+    .cat-btn:hover:not(.active) {
+      background: var(--secondary-blue);
+      color: white;
+      transform: translateY(-2px);
+    }
+
+    /* GRADE PRODUTOS */
+    .products-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 1.8rem;
+      padding: 2rem 1.5rem;
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+
+    .product-card {
+      background: var(--white);
+      border-radius: var(--border-radius);
+      overflow: hidden;
+      box-shadow: var(--shadow-md);
+      transition: var(--transition);
+      cursor: pointer;
+      border: 1px solid #eef2ff;
+    }
+
+    .product-card:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 20px 25px -12px rgba(0, 0, 0, 0.15);
+      border-color: var(--secondary-blue);
+    }
+
+    .product-img {
+      width: 100%;
+      height: 180px;
+      object-fit: cover;
+      background: #eef2ff;
+    }
+
+    .product-info {
+      padding: 1.2rem;
+    }
+
+    .product-name {
+      font-weight: 800;
+      font-size: 1.1rem;
+      color: var(--text-dark);
+    }
+
+    .product-desc {
+      font-size: 0.75rem;
+      color: var(--text-light);
+      margin: 0.4rem 0;
+      line-height: 1.4;
+    }
+
+    .product-price {
+      font-weight: 800;
+      color: var(--primary-blue);
+      font-size: 1.3rem;
+      margin-top: 0.5rem;
+    }
+
+    .btn-add {
+      background: var(--primary-blue);
+      color: white;
+      border: none;
+      width: 100%;
+      padding: 0.7rem;
+      border-radius: 12px;
+      font-weight: 700;
+      margin-top: 0.8rem;
+      transition: var(--transition);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      font-size: 0.9rem;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .btn-add:hover {
+      background: var(--secondary-blue);
+      transform: scale(1.02);
+    }
+
+    /* TOAST */
+    .toast-message {
+      position: fixed;
+      bottom: 30px;
+      left: 50%;
+      transform: translateX(-50%) scale(0.9);
+      background: var(--primary-blue);
+      color: white;
+      padding: 12px 24px;
+      border-radius: 50px;
+      font-weight: 600;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+      z-index: 10000;
+      opacity: 0;
+      transition: all 0.3s ease;
+      pointer-events: none;
+      white-space: nowrap;
+      backdrop-filter: blur(4px);
+      border-left: 4px solid var(--yellow-accent);
+    }
+    .toast-message.show {
+      opacity: 1;
+      transform: translateX(-50%) scale(1);
+    }
+
+    /* PULSE CARRINHO */
+    .cart-bounce {
+      animation: bounceCart 0.4s ease;
+    }
+
+    @keyframes bounceCart {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.2); }
+      100% { transform: scale(1); }
+    }
+
+    /* CARRINHO PANEL */
+    .checkout-panel {
+      position: fixed;
+      top: 0;
+      right: 0;
+      width: 100%;
+      max-width: 500px;
+      height: 100vh;
+      background: var(--white);
+      z-index: 1000;
+      box-shadow: -5px 0 25px rgba(0, 0, 0, 0.1);
+      overflow-y: auto;
+      transform: translateX(100%);
+      transition: transform 0.3s ease;
+      padding: 1.5rem;
+      border-left: 4px solid var(--yellow-accent);
+    }
+
+    .checkout-panel.open {
+      transform: translateX(0);
+    }
+
+    .close-cart {
+      background: none;
+      border: none;
+      font-size: 1.5rem;
+      cursor: pointer;
+      float: right;
+      color: var(--primary-blue);
+      transition: var(--transition);
+    }
+
+    .cart-item-list {
+      margin: 1rem 0;
+      max-height: 320px;
+      overflow-y: auto;
+    }
+
+    .cart-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid #e2e8f0;
+      padding: 0.8rem 0;
+    }
+
+    .remove-item {
+      background: none;
+      border: none;
+      color: #dc2626;
+      cursor: pointer;
+    }
+
+    /* formulários */
+    .form-group {
+      margin-bottom: 1rem;
+    }
+    .form-group label {
+      font-weight: 600;
+      display: block;
+      margin-bottom: 0.3rem;
+    }
+    input, select {
+      width: 100%;
+      padding: 0.75rem;
+      border-radius: 12px;
+      border: 1px solid #cbd5e1;
+      background: var(--white);
+    }
+    .freight-option {
+      border: 2px solid var(--primary-blue);
+      border-radius: 14px;
+      padding: 0.8rem;
+      margin: 8px 0;
+      display: flex;
+      justify-content: space-between;
+      cursor: pointer;
+    }
+    .orderbump-item {
+      border: 1px solid #e2e8f0;
+      border-radius: 16px;
+      margin: 12px 0;
+      padding: 0.8rem;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .hidden { display: none; }
+    footer {
+      background: #f8fafc;
+      border-top: 1px solid #e2e8f0;
+      text-align: center;
+      padding: 1.2rem;
+      margin-top: 2rem;
+      color: var(--text-light);
+    }
+    @media (max-width: 640px) {
+      .products-grid { grid-template-columns: 1fr 1fr; gap: 1rem; padding: 1rem; }
+      .toast-message { white-space: normal; text-align: center; width: 90%; font-size: 0.9rem; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="app-header">
+  <div class="top-bar">
+    <div class="logo-area">
+      <h1><i class="fas fa-pizza-slice" style="color: var(--yellow-accent);"></i> MIL GRAU PIZZAS</h1>
+      <p>🔥 Direto do forno pra você</p>
+    </div>
+    <div class="cart-icon" id="openCartBtn">
+      <i class="fas fa-shopping-bag"></i> Carrinho <span id="cartCount">0</span>
+    </div>
+  </div>
+  <div class="banner-cover">
+    <h2><i class="fas fa-fire"></i> A PIZZA MAIS BRABA DA CIDADE</h2>
+    <p style="font-size:0.9rem; margin-top:6px;">Forno a lenha | Massa artesanal | Ingredientes selecionados</p>
+  </div>
+</div>
+
+<div class="categories-nav" id="categoriesNav">
+  <button class="cat-btn active" data-cat="todos">🔥 TODOS</button>
+  <button class="cat-btn" data-cat="combos">📦 COMBOS</button>
+  <button class="cat-btn" data-cat="tradicional">🍕 TRADICIONAIS</button>
+  <button class="cat-btn" data-cat="especiais">✨ ESPECIAIS</button>
+  <button class="cat-btn" data-cat="doces">🍫 DOCES</button>
+  <button class="cat-btn" data-cat="bordas">🧀 BORDAS</button>
+  <button class="cat-btn" data-cat="bebidas">🥤 BEBIDAS</button>
+</div>
+
+<div id="productsContainer" class="products-grid"></div>
+
+<footer>
+  <i class="fas fa-motorcycle"></i> Entrega rápida | (11) 99999-9999 | Mil Grau Pizzas 🔥
+</footer>
+
+<!-- CARRINHO + CHECKOUT (mesma estrutura) -->
+<div id="checkoutPanel" class="checkout-panel">
+  <button class="close-cart" id="closeCartBtn"><i class="fas fa-times"></i></button>
+  <h2 style="color: var(--primary-blue);"><i class="fas fa-shopping-cart"></i> Seu pedido</h2>
+  <div id="cartItemsList" class="cart-item-list"></div>
+  <hr>
+  <div style="font-weight: bold; font-size: 1.2rem; margin: 10px 0;">Total: <span id="cartTotalPreview">R$ 0,00</span></div>
+  <button class="btn-add" id="proceedToCheckoutBtn" style="background: #077C22;">➡️ FINALIZAR PEDIDO</button>
+  
+  <div id="checkoutFormSection" class="hidden" style="margin-top: 1.5rem;">
+    <h3>Dados para entrega</h3>
+    <div class="form-group"><label>Nome completo *</label><input type="text" id="nomeCliente" placeholder="Seu nome"></div>
+    <div class="form-group"><label>WhatsApp *</label><input type="text" id="telefoneCliente" placeholder="(11) 99999-9999"></div>
+    <div class="form-group"><label>CEP *</label><input type="text" id="cepCliente" placeholder="58000-000"></div>
+    <div id="addressFields" class="hidden">
+      <div class="form-group"><input type="text" id="endereco" placeholder="Rua"></div>
+      <div class="form-group"><input type="text" id="numero" placeholder="Número"></div>
+      <div class="form-group"><input type="text" id="bairro" placeholder="Bairro"></div>
+      <div class="form-group"><input type="text" id="cidade" placeholder="Cidade"></div>
+    </div>
+    <div class="freight" id="freightArea">
+      <label class="freight-option"><div><strong>📦 Entrega Express</strong><br><span>20-35 min</span></div><span>Grátis</span><input type="radio" name="freightRadio" checked value="0" style="width:20px;"></label>
+    </div>
+    <h3>Ofertas especiais</h3>
+    <div class="orderbump-item"><img src="https://images.unsplash.com/photo-1622484214939-6b17c61a3f1e?w=60&h=60&fit=crop" width="50" style="border-radius:12px;"><div><strong>Coca-Cola Lata</strong><br>R$ 5,00</div><label style="margin-left:auto;"><input type="checkbox" class="orderbumpCheck" data-name="Coca-Cola Lata" data-price="5.00" data-img="..."> Adicionar</label></div>
+    <div class="orderbump-item"><img src="https://images.unsplash.com/photo-1634300674409-7b9b7b1d5fcf?w=60&h=60&fit=crop" width="50" style="border-radius:12px;"><div><strong>Coca-Cola Zero Lata</strong><br>R$ 5,00</div><label style="margin-left:auto;"><input type="checkbox" class="orderbumpCheck" data-name="Coca-Cola Zero Lata" data-price="5.00" data-img="..."> Adicionar</label></div>
+    <button id="finalizeOrderBtn" class="btn-add pay-btn" style="background: var(--primary-blue);">💳 GERAR PIX / PEDIDO</button>
+    <div id="pixMockArea" style="margin-top:15px; text-align:center; background:#f0f9ff; border-radius:20px; padding:15px; display:none;">
+      <i class="fas fa-qrcode" style="font-size:80px; color:var(--primary-blue);"></i>
+      <p><strong>🔥 PEDIDO RECEBIDO 🔥</strong><br>Mil Grau Pizzas confirma!<br>Entraremos em contato via WhatsApp.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ÁUDIO FEEDBACK -->
+<audio id="clickSound" src="https://assets.mixkit.co/sfx/preview/mixkit-fast-small-sweep-transition-166.wav"></audio>
+
+<script>
+  // ------------------- CARDÁPIO ORIGINAL (NÃO ALTERADO) -------------------
+  const produtosData = [
+    { id: "combo1", nome: "🍕 COMBO ESPECIAL", descricao: "1 Pizza G + 1 Pizza P + Coca 1L", preco: 59.99, categoria: "combos", imagem: "https://images.unsplash.com/photo-1590947132387-155cc02f3212?w=400&h=200&fit=crop" },
+    { id: "combo2", nome: "MILGRAU CASAL", descricao: "2 Pizzas G (1 sabor cada) + Refri Indaí 1L", preco: 45.99, categoria: "combos", imagem: "https://images.unsplash.com/photo-1604382354936-07c5d9983bd3?w=400&h=200&fit=crop" },
+    { id: "combo3", nome: "MILGRAU FAMÍLIA", descricao: "3 Pizzas G + 1 Pizza P + Refri Indaí 1L", preco: 75.99, categoria: "combos", imagem: "https://images.unsplash.com/photo-1604382354936-07c5d9983bd3?w=400&h=200&fit=crop" },
+    { id: "trad1", nome: "Frango", descricao: "Molho, queijo, frango e orégano", preco: 20.00, categoria: "tradicional", imagem: "https://images.unsplash.com/photo-1513104890138-7c749659a591?w=400&h=200&fit=crop" },
+    { id: "trad2", nome: "Frango c/ Catupiry", descricao: "Molho, queijo, frango, catupiry", preco: 20.00, categoria: "tradicional", imagem: "https://images.unsplash.com/photo-1513104890138-7c749659a591?w=400&h=200&fit=crop" },
+    { id: "trad3", nome: "Calabresa c/ Barbecue", descricao: "Molho barbecue, calabresa, cebola", preco: 20.00, categoria: "tradicional", imagem: "https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=400&h=200&fit=crop" },
+    { id: "trad4", nome: "Frango com Cheddar", descricao: "Frango, cheddar e orégano", preco: 20.00, categoria: "tradicional", imagem: "https://images.unsplash.com/photo-1513104890138-7c749659a591?w=400&h=200&fit=crop" },
+    { id: "trad5", nome: "Frambacon", descricao: "Frango, bacon, milho", preco: 20.00, categoria: "tradicional", imagem: "https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=400&h=200&fit=crop" },
+    { id: "trad6", nome: "Mista", descricao: "Presunto, tomate, queijo", preco: 20.00, categoria: "tradicional", imagem: "https://images.unsplash.com/photo-1513104890138-7c749659a591?w=400&h=200&fit=crop" },
+    { id: "trad7", nome: "Portuguesa", descricao: "Presunto, ovo, cebola, pimentão", preco: 20.00, categoria: "tradicional", imagem: "https://images.unsplash.com/photo-1513104890138-7c749659a591?w=400&h=200&fit=crop" },
+    { id: "esp1", nome: "Calabresa c/ Cream Cheese", descricao: "Calabresa, cream cheese (G)", preco: 35.00, categoria: "especiais", imagem: "https://images.unsplash.com/photo-1574071318508-1cdbab80d002?w=400&h=200&fit=crop" },
+    { id: "esp2", nome: "Carne de Sol Cream Cheese", descricao: "Carne de sol, cream cheese, cebola roxa", preco: 35.00, categoria: "especiais", imagem: "https://images.unsplash.com/photo-1574071318508-1cdbab80d002?w=400&h=200&fit=crop" },
+    { id: "esp3", nome: "Nordestina", descricao: "Carne de sol, catupiry, cebola", preco: 35.00, categoria: "especiais", imagem: "https://images.unsplash.com/photo-1574071318508-1cdbab80d002?w=400&h=200&fit=crop" },
+    { id: "esp4", nome: "Lombinho Cream Cheese", descricao: "Lombinho e cream cheese", preco: 35.00, categoria: "especiais", imagem: "https://images.unsplash.com/photo-1574071318508-1cdbab80d002?w=400&h=200&fit=crop" },
+    { id: "esp5", nome: "Camarão c/ Cream Cheese", descricao: "Camarão, cream cheese (+R$5 extra incluso)", preco: 39.99, categoria: "especiais", imagem: "https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=400&h=200&fit=crop" },
+    { id: "doce1", nome: "Chocolate com MM", descricao: "Pizza doce G", preco: 20.00, categoria: "doces", imagem: "https://images.unsplash.com/photo-1571066811602-716837aa6d6a?w=400&h=200&fit=crop" },
+    { id: "doce2", nome: "Brigadeiro", descricao: "Cobertura de brigadeiro", preco: 20.00, categoria: "doces", imagem: "https://images.unsplash.com/photo-1571066811602-716837aa6d6a?w=400&h=200&fit=crop" },
+    { id: "doce3", nome: "Prestígio", descricao: "Coco e chocolate", preco: 20.00, categoria: "doces", imagem: "https://images.unsplash.com/photo-1571066811602-716837aa6d6a?w=400&h=200&fit=crop" },
+    { id: "doce4", nome: "Dois Amores", descricao: "Chocolate branco e preto", preco: 20.00, categoria: "doces", imagem: "https://images.unsplash.com/photo-1571066811602-716837aa6d6a?w=400&h=200&fit=crop" },
+    { id: "doce5", nome: "Banana c/ Doce de Leite", descricao: "Banana e doce de leite", preco: 20.00, categoria: "doces", imagem: "https://images.unsplash.com/photo-1571066811602-716837aa6d6a?w=400&h=200&fit=crop" },
+    { id: "borda1", nome: "Borda de Chocolate", descricao: "Recheio especial", preco: 10.00, categoria: "bordas", imagem: "https://images.unsplash.com/photo-1541599545896-8b2f9fbc6a17?w=400&h=200&fit=crop" },
+    { id: "borda2", nome: "Borda de Cheddar", descricao: "Cheddar cremoso", preco: 5.00, categoria: "bordas", imagem: "https://images.unsplash.com/photo-1541599545896-8b2f9fbc6a17?w=400&h=200&fit=crop" },
+    { id: "borda3", nome: "Borda de Catupiry", descricao: "Catupiry tradicional", preco: 5.00, categoria: "bordas", imagem: "https://images.unsplash.com/photo-1541599545896-8b2f9fbc6a17?w=400&h=200&fit=crop" },
+    { id: "beb1", nome: "Refri Indaí (caixinha)", descricao: "350ml", preco: 6.00, categoria: "bebidas", imagem: "https://images.unsplash.com/photo-1625772299848-391b6a87d7b3?w=400&h=200&fit=crop" },
+    { id: "beb2", nome: "Refri Indaí 2L", descricao: "Garrafa 2 litros", preco: 10.00, categoria: "bebidas", imagem: "https://images.unsplash.com/photo-1625772299848-391b6a87d7b3?w=400&h=200&fit=crop" }
+  ];
+
+  let carrinho = JSON.parse(localStorage.getItem('pizzaria_carrinho')) || [];
+  let currentCategory = "todos";
+  let freightCost = 0;
+
+  // ========== FUNÇÕES DE ANIMAÇÃO E FEEDBACK ==========
+  function mostrarToast(mensagem) {
+    let toast = document.querySelector('.toast-message');
+    if (!toast) {
+      toast = document.createElement('div');
+      toast.className = 'toast-message';
+      document.body.appendChild(toast);
+    }
+    toast.innerText = mensagem;
+    toast.classList.add('show');
+    setTimeout(() => toast.classList.remove('show'), 2000);
+  }
+
+  function animarCarrinho() {
+    const cart = document.getElementById('openCartBtn');
+    cart.classList.add('cart-bounce');
+    setTimeout(() => cart.classList.remove('cart-bounce'), 400);
+  }
+
+  function vibrar() {
+    if (navigator.vibrate) navigator.vibrate(50);
+  }
+
+  function tocarSom() {
+    const audio = document.getElementById('clickSound');
+    if (audio) {
+      audio.currentTime = 0;
+      audio.play().catch(e => console.log("áudio bloqueado"));
+    }
+  }
+
+  function animarAdicionarAoCarrinho(imgElement) {
+    const cart = document.getElementById('openCartBtn');
+    if (!imgElement || !cart) return;
+    const imgRect = imgElement.getBoundingClientRect();
+    const cartRect = cart.getBoundingClientRect();
+    const clone = imgElement.cloneNode(true);
+    clone.style.position = 'fixed';
+    clone.style.left = imgRect.left + 'px';
+    clone.style.top = imgRect.top + 'px';
+    clone.style.width = imgRect.width + 'px';
+    clone.style.height = imgRect.height + 'px';
+    clone.style.borderRadius = '12px';
+    clone.style.zIndex = '9999';
+    clone.style.transition = 'all 0.7s ease-in-out';
+    clone.style.objectFit = 'cover';
+    document.body.appendChild(clone);
+    setTimeout(() => {
+      clone.style.left = cartRect.left + 'px';
+      clone.style.top = cartRect.top + 'px';
+      clone.style.width = '40px';
+      clone.style.height = '40px';
+      clone.style.opacity = '0.5';
+    }, 10);
+    setTimeout(() => clone.remove(), 700);
+  }
+
+  // ========== FUNÇÕES CARRINHO (ORIGINAIS) ==========
+  function salvarCarrinho() { localStorage.setItem('pizzaria_carrinho', JSON.stringify(carrinho)); atualizarContador(); }
+  function atualizarContador() { const totalItens = carrinho.reduce((sum, i) => sum + i.qtd, 0); document.getElementById('cartCount').innerText = totalItens; }
+  function atualizarPreviewCarrinho() {
+    const container = document.getElementById('cartItemsList');
+    if (!container) return;
+    let total = 0;
+    container.innerHTML = carrinho.map(item => {
+      const subtotal = item.preco * item.qtd;
+      total += subtotal;
+      return `<div class="cart-item"><div><img src="${item.imagem}" width="45" style="border-radius:8px;"> <strong>${item.nome}</strong> x${item.qtd}</div><div>R$ ${subtotal.toFixed(2).replace('.',',')} <button class="remove-item" data-id="${item.id}"><i class="fas fa-trash-alt"></i></button></div></div>`;
+    }).join('');
+    document.getElementById('cartTotalPreview').innerText = `R$ ${total.toFixed(2).replace('.',',')}`;
+    document.querySelectorAll('.remove-item').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        const id = btn.dataset.id;
+        carrinho = carrinho.filter(i => i.id !== id);
+        salvarCarrinho();
+        atualizarPreviewCarrinho();
+        if (carrinho.length === 0) document.getElementById('checkoutFormSection')?.classList.add('hidden');
+      });
+    });
+  }
+
+  function renderizarProdutos() {
+    const container = document.getElementById('productsContainer');
+    let filtered = currentCategory === "todos" ? produtosData : produtosData.filter(p => p.categoria === currentCategory);
+    container.innerHTML = filtered.map(prod => `
+      <div class="product-card">
+        <img class="product-img" src="${prod.imagem}" alt="${prod.nome}" loading="lazy">
+        <div class="product-info">
+          <div class="product-name">${prod.nome}</div>
+          <div class="product-desc">${prod.descricao}</div>
+          <div class="product-price">R$ ${prod.preco.toFixed(2).replace('.',',')}</div>
+          <button class="btn-add" data-id="${prod.id}" data-nome="${prod.nome}" data-preco="${prod.preco}" data-img="${prod.imagem}"><i class="fas fa-plus-circle"></i> Adicionar</button>
+        </div>
+      </div>
+    `).join('');
+    document.querySelectorAll('.btn-add[data-id]').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const id = btn.dataset.id, nome = btn.dataset.nome, preco = parseFloat(btn.dataset.preco), img = btn.dataset.img;
+        const existente = carrinho.find(i => i.id === id);
+        if (existente) existente.qtd += 1;
+        else carrinho.push({ id, nome, preco, imagem: img, qtd: 1 });
+        salvarCarrinho();
+        atualizarPreviewCarrinho();
+
+        // ANIMAÇÕES E FEEDBACK
+        const imgElement = btn.closest('.product-card').querySelector('.product-img');
+        if (imgElement) animarAdicionarAoCarrinho(imgElement);
+        animarCarrinho();
+        mostrarToast(`🍕 ${nome} adicionado ao carrinho!`);
+        vibrar();
+        tocarSom();
+      });
+    });
+  }
+
+  // ========== INICIALIZAÇÃO E EVENTOS (NÃO ALTERADOS) ==========
+  const panel = document.getElementById('checkoutPanel');
+  document.getElementById('openCartBtn').onclick = () => { atualizarPreviewCarrinho(); panel.classList.add('open'); document.getElementById('checkoutFormSection').classList.add('hidden'); document.getElementById('pixMockArea').style.display = 'none'; };
+  document.getElementById('closeCartBtn').onclick = () => panel.classList.remove('open');
+  document.getElementById('proceedToCheckoutBtn').onclick = () => { if(carrinho.length===0){ alert("Adicione itens"); return; } document.getElementById('checkoutFormSection').classList.remove('hidden'); };
+
+  document.getElementById('cepCliente')?.addEventListener('blur', async function() {
+    let cep = this.value.replace(/\D/g,'');
+    if(cep.length !== 8) return;
+    try {
+      const res = await fetch(`https://viacep.com.br/ws/${cep}/json/`);
+      const data = await res.json();
+      if(!data.erro) {
+        document.getElementById('endereco').value = data.logradouro;
+        document.getElementById('bairro').value = data.bairro;
+        document.getElementById('cidade').value = data.localidade;
+        document.getElementById('addressFields').classList.remove('hidden');
+      } else alert('CEP não encontrado');
+    } catch(e) { alert('Erro ao buscar CEP'); }
+  });
+
+  function calcularTotalFinal() {
+    let cartTotal = carrinho.reduce((acc, i) => acc + (i.preco * i.qtd), 0);
+    let bumps = 0;
+    document.querySelectorAll('.orderbumpCheck:checked').forEach(ch => bumps += parseFloat(ch.dataset.price));
+    return cartTotal + freightCost + bumps;
+  }
+
+  function atualizarTotalCheckout() {
+    const totalFinal = calcularTotalFinal();
+    const totalSpan = document.getElementById('cartTotalPreview');
+    if(totalSpan) totalSpan.innerText = `R$ ${totalFinal.toFixed(2).replace('.',',')}`;
+  }
+
+  document.getElementById('finalizeOrderBtn')?.addEventListener('click', () => {
+    const nome = document.getElementById('nomeCliente')?.value.trim();
+    const telefone = document.getElementById('telefoneCliente')?.value.trim();
+    const cep = document.getElementById('cepCliente')?.value.trim();
+    if(!nome || !telefone || !cep) { alert("Preencha nome, telefone e CEP."); return; }
+    if(carrinho.length === 0) { alert("Carrinho vazio!"); return; }
+    const total = calcularTotalFinal();
+    const itensResumo = carrinho.map(i => `${i.nome} x${i.qtd}`).join(', ');
+    const orderbumpsAdd = [...document.querySelectorAll('.orderbumpCheck:checked')].map(cb => cb.dataset.name);
+    alert(`🔥 MIL GRAU PIZZAS 🔥\nCliente: ${nome}\nTel: ${telefone}\nEndereço: ${document.getElementById('endereco')?.value}, ${document.getElementById('numero')?.value} - ${document.getElementById('bairro')?.value}\nItens: ${itensResumo}\nExtras: ${orderbumpsAdd.join(', ') || 'nenhum'}\nTotal: R$ ${total.toFixed(2)}\n\n✅ Pedido recebido! Em breve contato.`);
+    document.getElementById('pixMockArea').style.display = 'block';
+    carrinho = [];
+    salvarCarrinho();
+    atualizarPreviewCarrinho();
+    atualizarContador();
+    document.querySelectorAll('.orderbumpCheck').forEach(cb => cb.checked = false);
+    freightCost = 0;
+    atualizarTotalCheckout();
+  });
+
+  document.addEventListener('change', (e) => { if(e.target.classList?.contains('orderbumpCheck')) atualizarTotalCheckout(); });
+  document.getElementById('freightArea')?.addEventListener('change', () => { freightCost = 0; atualizarTotalCheckout(); });
+  document.querySelectorAll('.cat-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      currentCategory = btn.dataset.cat;
+      renderizarProdutos();
+    });
+  });
+  renderizarProdutos();
+  atualizarContador();
+  atualizarPreviewCarrinho();
+</script>
+</body>
+</html># mil-Grau-Pizzas
