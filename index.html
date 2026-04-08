@@ -8,7 +8,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
   <style>
-    /* ========== NOVA IDENTIDADE VISUAL - AZUL / BRANCO / AMARELO ========== */
+    /* ========== IDENTIDADE VISUAL - AZUL / BRANCO / AMARELO ========== */
     :root {
       --primary-blue: #1E3A8A;
       --secondary-blue: #3B82F6;
@@ -33,6 +33,19 @@
     body {
       background: var(--white);
       color: var(--text-dark);
+    }
+
+    /* NOVA IMAGEM DE DESTAQUE */
+    .top-hero {
+      text-align: center;
+      background: var(--white);
+      padding: 1rem 1rem 0 1rem;
+    }
+    .hero-img {
+      max-width: 100%;
+      height: auto;
+      border-radius: 1.5rem;
+      box-shadow: var(--shadow-sm);
     }
 
     /* HEADER AZUL */
@@ -262,7 +275,7 @@
       transform: translateX(-50%) scale(1);
     }
 
-    /* PULSE CARRINHO */
+    /* PULSE CARRINHO (mantido apenas para clique no ícone) */
     .cart-bounce {
       animation: bounceCart 0.4s ease;
     }
@@ -361,6 +374,58 @@
       gap: 12px;
     }
     .hidden { display: none; }
+
+    /* RESUMO DO PEDIDO (NOVO) */
+    .order-summary {
+      background: #f8fafc;
+      border-radius: 1.5rem;
+      padding: 1.2rem;
+      margin: 1rem 0;
+      text-align: left;
+    }
+    .order-summary h4 {
+      font-size: 1.2rem;
+      margin-bottom: 0.8rem;
+      color: var(--primary-blue);
+      border-left: 4px solid var(--yellow-accent);
+      padding-left: 10px;
+    }
+    .summary-item {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.9rem;
+      padding: 0.3rem 0;
+      border-bottom: 1px dashed #cbd5e1;
+    }
+    .summary-total {
+      font-weight: 800;
+      font-size: 1.2rem;
+      margin-top: 0.8rem;
+      text-align: right;
+      color: var(--primary-blue);
+    }
+    .btn-whatsapp {
+      background: #25D366;
+      color: white;
+      border: none;
+      width: 100%;
+      padding: 0.9rem;
+      border-radius: 40px;
+      font-weight: 800;
+      font-size: 1rem;
+      margin-top: 1rem;
+      cursor: pointer;
+      transition: 0.2s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+    }
+    .btn-whatsapp:hover {
+      background: #128C7E;
+      transform: scale(1.02);
+    }
+
     footer {
       background: #f8fafc;
       border-top: 1px solid #e2e8f0;
@@ -376,6 +441,11 @@
   </style>
 </head>
 <body>
+
+<!-- IMAGEM DE DESTAQUE (NOVA) -->
+<div class="top-hero">
+  <img src="Perfil do site.png" alt="Mil Grau Pizzas" class="hero-img">
+</div>
 
 <div class="app-header">
   <div class="top-bar">
@@ -409,7 +479,7 @@
   <i class="fas fa-motorcycle"></i> Entrega rápida | (11) 99999-9999 | Mil Grau Pizzas 🔥
 </footer>
 
-<!-- CARRINHO + CHECKOUT (mesma estrutura) -->
+<!-- CARRINHO + CHECKOUT -->
 <div id="checkoutPanel" class="checkout-panel">
   <button class="close-cart" id="closeCartBtn"><i class="fas fa-times"></i></button>
   <h2 style="color: var(--primary-blue);"><i class="fas fa-shopping-cart"></i> Seu pedido</h2>
@@ -435,11 +505,12 @@
     <h3>Ofertas especiais</h3>
     <div class="orderbump-item"><img src="https://images.unsplash.com/photo-1622484214939-6b17c61a3f1e?w=60&h=60&fit=crop" width="50" style="border-radius:12px;"><div><strong>Coca-Cola Lata</strong><br>R$ 5,00</div><label style="margin-left:auto;"><input type="checkbox" class="orderbumpCheck" data-name="Coca-Cola Lata" data-price="5.00" data-img="..."> Adicionar</label></div>
     <div class="orderbump-item"><img src="https://images.unsplash.com/photo-1634300674409-7b9b7b1d5fcf?w=60&h=60&fit=crop" width="50" style="border-radius:12px;"><div><strong>Coca-Cola Zero Lata</strong><br>R$ 5,00</div><label style="margin-left:auto;"><input type="checkbox" class="orderbumpCheck" data-name="Coca-Cola Zero Lata" data-price="5.00" data-img="..."> Adicionar</label></div>
-    <button id="finalizeOrderBtn" class="btn-add pay-btn" style="background: var(--primary-blue);">💳 GERAR PIX / PEDIDO</button>
-    <div id="pixMockArea" style="margin-top:15px; text-align:center; background:#f0f9ff; border-radius:20px; padding:15px; display:none;">
-      <i class="fas fa-qrcode" style="font-size:80px; color:var(--primary-blue);"></i>
-      <p><strong>🔥 PEDIDO RECEBIDO 🔥</strong><br>Mil Grau Pizzas confirma!<br>Entraremos em contato via WhatsApp.</p>
-    </div>
+    
+    <!-- Botão que gera o resumo e o link do WhatsApp (PIX removido) -->
+    <button id="finalizeOrderBtn" class="btn-add pay-btn" style="background: var(--primary-blue);">📋 REVISAR PEDIDO</button>
+    
+    <!-- Área onde será exibido o resumo bonito do pedido (antes era pixMockArea) -->
+    <div id="orderSummaryArea" style="margin-top: 1rem;"></div>
   </div>
 </div>
 
@@ -447,7 +518,7 @@
 <audio id="clickSound" src="https://assets.mixkit.co/sfx/preview/mixkit-fast-small-sweep-transition-166.wav"></audio>
 
 <script>
-  // ------------------- CARDÁPIO ORIGINAL (NÃO ALTERADO) -------------------
+  // ------------------- CARDÁPIO ORIGINAL (INALTERADO) -------------------
   const produtosData = [
     { id: "combo1", nome: "🍕 COMBO ESPECIAL", descricao: "1 Pizza G + 1 Pizza P + Coca 1L", preco: 59.99, categoria: "combos", imagem: "https://images.unsplash.com/photo-1590947132387-155cc02f3212?w=400&h=200&fit=crop" },
     { id: "combo2", nome: "MILGRAU CASAL", descricao: "2 Pizzas G (1 sabor cada) + Refri Indaí 1L", preco: 45.99, categoria: "combos", imagem: "https://images.unsplash.com/photo-1604382354936-07c5d9983bd3?w=400&h=200&fit=crop" },
@@ -480,7 +551,7 @@
   let currentCategory = "todos";
   let freightCost = 0;
 
-  // ========== FUNÇÕES DE ANIMAÇÃO E FEEDBACK ==========
+  // ========== FUNÇÕES DE FEEDBACK (SEM ANIMAÇÃO DE VOO) ==========
   function mostrarToast(mensagem) {
     let toast = document.querySelector('.toast-message');
     if (!toast) {
@@ -511,33 +582,7 @@
     }
   }
 
-  function animarAdicionarAoCarrinho(imgElement) {
-    const cart = document.getElementById('openCartBtn');
-    if (!imgElement || !cart) return;
-    const imgRect = imgElement.getBoundingClientRect();
-    const cartRect = cart.getBoundingClientRect();
-    const clone = imgElement.cloneNode(true);
-    clone.style.position = 'fixed';
-    clone.style.left = imgRect.left + 'px';
-    clone.style.top = imgRect.top + 'px';
-    clone.style.width = imgRect.width + 'px';
-    clone.style.height = imgRect.height + 'px';
-    clone.style.borderRadius = '12px';
-    clone.style.zIndex = '9999';
-    clone.style.transition = 'all 0.7s ease-in-out';
-    clone.style.objectFit = 'cover';
-    document.body.appendChild(clone);
-    setTimeout(() => {
-      clone.style.left = cartRect.left + 'px';
-      clone.style.top = cartRect.top + 'px';
-      clone.style.width = '40px';
-      clone.style.height = '40px';
-      clone.style.opacity = '0.5';
-    }, 10);
-    setTimeout(() => clone.remove(), 700);
-  }
-
-  // ========== FUNÇÕES CARRINHO (ORIGINAIS) ==========
+  // ========== FUNÇÕES CARRINHO ==========
   function salvarCarrinho() { localStorage.setItem('pizzaria_carrinho', JSON.stringify(carrinho)); atualizarContador(); }
   function atualizarContador() { const totalItens = carrinho.reduce((sum, i) => sum + i.qtd, 0); document.getElementById('cartCount').innerText = totalItens; }
   function atualizarPreviewCarrinho() {
@@ -585,9 +630,7 @@
         salvarCarrinho();
         atualizarPreviewCarrinho();
 
-        // ANIMAÇÕES E FEEDBACK
-        const imgElement = btn.closest('.product-card').querySelector('.product-img');
-        if (imgElement) animarAdicionarAoCarrinho(imgElement);
+        // APENAS TOAST + SOM + VIBRAÇÃO (SEM ANIMAÇÃO DE VOO)
         animarCarrinho();
         mostrarToast(`🍕 ${nome} adicionado ao carrinho!`);
         vibrar();
@@ -596,11 +639,123 @@
     });
   }
 
-  // ========== INICIALIZAÇÃO E EVENTOS (NÃO ALTERADOS) ==========
+  // ========== FUNÇÃO PARA GERAR RESUMO E WHATSAPP ==========
+  function exibirResumoPedido() {
+    const nome = document.getElementById('nomeCliente')?.value.trim();
+    const telefone = document.getElementById('telefoneCliente')?.value.trim();
+    const cep = document.getElementById('cepCliente')?.value.trim();
+    const endereco = document.getElementById('endereco')?.value || "";
+    const numero = document.getElementById('numero')?.value || "";
+    const bairro = document.getElementById('bairro')?.value || "";
+    const cidade = document.getElementById('cidade')?.value || "";
+
+    if(!nome || !telefone || !cep) {
+      alert("Preencha nome, WhatsApp e CEP.");
+      return false;
+    }
+    if(carrinho.length === 0) {
+      alert("Carrinho vazio!");
+      return false;
+    }
+
+    // Calcular totais
+    let subtotal = carrinho.reduce((acc, i) => acc + (i.preco * i.qtd), 0);
+    let bumpsTotal = 0;
+    let bumpsList = [];
+    document.querySelectorAll('.orderbumpCheck:checked').forEach(ch => {
+      bumpsTotal += parseFloat(ch.dataset.price);
+      bumpsList.push(ch.dataset.name);
+    });
+    let totalFinal = subtotal + freightCost + bumpsTotal;
+
+    // Construir HTML do resumo
+    let itensHtml = carrinho.map(item => `
+      <div class="summary-item">
+        <span>${item.nome} (x${item.qtd})</span>
+        <span>R$ ${(item.preco * item.qtd).toFixed(2).replace('.',',')}</span>
+      </div>
+    `).join('');
+
+    if (bumpsList.length) {
+      itensHtml += `<div class="summary-item" style="color:var(--primary-blue);"><span>➕ Extras:</span><span>${bumpsList.join(', ')}</span></div>`;
+      itensHtml += `<div class="summary-item"><span>Valor extras</span><span>R$ ${bumpsTotal.toFixed(2).replace('.',',')}</span></div>`;
+    }
+
+    const enderecoCompleto = `${endereco}, ${numero} - ${bairro}, ${cidade}`;
+    const resumoHtml = `
+      <div class="order-summary">
+        <h4>📋 RESUMO DO PEDIDO</h4>
+        <div><strong>🧑 Cliente:</strong> ${nome}</div>
+        <div><strong>📞 WhatsApp:</strong> ${telefone}</div>
+        <div><strong>📍 Endereço:</strong> ${enderecoCompleto}</div>
+        <div style="margin: 12px 0 8px 0; font-weight:600;">🍕 ITENS:</div>
+        ${itensHtml}
+        <div class="summary-total">💰 TOTAL: R$ ${totalFinal.toFixed(2).replace('.',',')}</div>
+      </div>
+      <button id="sendWhatsAppBtn" class="btn-whatsapp">
+        <i class="fab fa-whatsapp"></i> Enviar Pedido no WhatsApp
+      </button>
+    `;
+
+    const area = document.getElementById('orderSummaryArea');
+    area.innerHTML = resumoHtml;
+    area.style.display = 'block';
+
+    // Adicionar evento ao botão WhatsApp
+    const sendBtn = document.getElementById('sendWhatsAppBtn');
+    sendBtn.addEventListener('click', () => {
+      // Montar mensagem
+      let mensagem = `🔥 *MIL GRAU PIZZAS* 🔥%0A`;
+      mensagem += `🧑 *Cliente:* ${nome}%0A`;
+      mensagem += `📞 *WhatsApp:* ${telefone}%0A`;
+      mensagem += `📍 *Endereço:* ${enderecoCompleto}%0A%0A`;
+      mensagem += `*🍕 ITENS DO PEDIDO:*%0A`;
+      carrinho.forEach(item => {
+        mensagem += `- ${item.nome} (x${item.qtd}) = R$ ${(item.preco * item.qtd).toFixed(2)}%0A`;
+      });
+      if (bumpsList.length) {
+        mensagem += `%0A*✨ EXTRAS:* ${bumpsList.join(', ')} (R$ ${bumpsTotal.toFixed(2)})%0A`;
+      }
+      mensagem += `%0A💰 *TOTAL: R$ ${totalFinal.toFixed(2)}*%0A%0A`;
+      mensagem += `✅ *Pedido gerado automaticamente pelo site.* Aguardamos a confirmação!`;
+
+      const linkWhats = `https://wa.me/5583999121539?text=${mensagem}`;
+      window.open(linkWhats, '_blank');
+
+      // Limpar carrinho após envio (opcional)
+      carrinho = [];
+      salvarCarrinho();
+      atualizarPreviewCarrinho();
+      atualizarContador();
+      document.querySelectorAll('.orderbumpCheck').forEach(cb => cb.checked = false);
+      freightCost = 0;
+      // Fechar o painel após envio
+      document.getElementById('checkoutPanel').classList.remove('open');
+      mostrarToast("Pedido enviado! Em breve entraremos em contato.");
+    });
+
+    return true;
+  }
+
+  // ========== INICIALIZAÇÃO E EVENTOS ==========
   const panel = document.getElementById('checkoutPanel');
-  document.getElementById('openCartBtn').onclick = () => { atualizarPreviewCarrinho(); panel.classList.add('open'); document.getElementById('checkoutFormSection').classList.add('hidden'); document.getElementById('pixMockArea').style.display = 'none'; };
+  document.getElementById('openCartBtn').onclick = () => { 
+    atualizarPreviewCarrinho(); 
+    panel.classList.add('open'); 
+    document.getElementById('checkoutFormSection').classList.add('hidden');
+    document.getElementById('orderSummaryArea').innerHTML = '';
+    document.getElementById('orderSummaryArea').style.display = 'none';
+  };
   document.getElementById('closeCartBtn').onclick = () => panel.classList.remove('open');
-  document.getElementById('proceedToCheckoutBtn').onclick = () => { if(carrinho.length===0){ alert("Adicione itens"); return; } document.getElementById('checkoutFormSection').classList.remove('hidden'); };
+  document.getElementById('proceedToCheckoutBtn').onclick = () => { 
+    if(carrinho.length===0){ 
+      mostrarToast("Adicione itens ao carrinho"); 
+      return; 
+    } 
+    document.getElementById('checkoutFormSection').classList.remove('hidden');
+    document.getElementById('orderSummaryArea').innerHTML = '';
+    document.getElementById('orderSummaryArea').style.display = 'none';
+  };
 
   document.getElementById('cepCliente')?.addEventListener('blur', async function() {
     let cep = this.value.replace(/\D/g,'');
@@ -630,28 +785,14 @@
     if(totalSpan) totalSpan.innerText = `R$ ${totalFinal.toFixed(2).replace('.',',')}`;
   }
 
+  // Botão "REVISAR PEDIDO" (antigo finalizeOrderBtn)
   document.getElementById('finalizeOrderBtn')?.addEventListener('click', () => {
-    const nome = document.getElementById('nomeCliente')?.value.trim();
-    const telefone = document.getElementById('telefoneCliente')?.value.trim();
-    const cep = document.getElementById('cepCliente')?.value.trim();
-    if(!nome || !telefone || !cep) { alert("Preencha nome, telefone e CEP."); return; }
-    if(carrinho.length === 0) { alert("Carrinho vazio!"); return; }
-    const total = calcularTotalFinal();
-    const itensResumo = carrinho.map(i => `${i.nome} x${i.qtd}`).join(', ');
-    const orderbumpsAdd = [...document.querySelectorAll('.orderbumpCheck:checked')].map(cb => cb.dataset.name);
-    alert(`🔥 MIL GRAU PIZZAS 🔥\nCliente: ${nome}\nTel: ${telefone}\nEndereço: ${document.getElementById('endereco')?.value}, ${document.getElementById('numero')?.value} - ${document.getElementById('bairro')?.value}\nItens: ${itensResumo}\nExtras: ${orderbumpsAdd.join(', ') || 'nenhum'}\nTotal: R$ ${total.toFixed(2)}\n\n✅ Pedido recebido! Em breve contato.`);
-    document.getElementById('pixMockArea').style.display = 'block';
-    carrinho = [];
-    salvarCarrinho();
-    atualizarPreviewCarrinho();
-    atualizarContador();
-    document.querySelectorAll('.orderbumpCheck').forEach(cb => cb.checked = false);
-    freightCost = 0;
-    atualizarTotalCheckout();
+    exibirResumoPedido();
   });
 
   document.addEventListener('change', (e) => { if(e.target.classList?.contains('orderbumpCheck')) atualizarTotalCheckout(); });
   document.getElementById('freightArea')?.addEventListener('change', () => { freightCost = 0; atualizarTotalCheckout(); });
+
   document.querySelectorAll('.cat-btn').forEach(btn => {
     btn.addEventListener('click', () => {
       document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
@@ -660,9 +801,10 @@
       renderizarProdutos();
     });
   });
+
   renderizarProdutos();
   atualizarContador();
   atualizarPreviewCarrinho();
 </script>
 </body>
-</html># mil-Grau-Pizzas
+</html>
